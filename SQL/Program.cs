@@ -23,28 +23,49 @@ namespace SQL
                 switch (sqlQuery[0])
                 {
                     case "SELECT":
-                        //select()
+                        if (sqlQuery.Contains("FROM"))
+                        {
+                            //select()
+                            break;
+                        }
+                        
                         break;
                     case "DELETE":
-                        //delete()
+                        if (sqlQuery.Contains("FROM"))
+                        {
+                            //delete()
+                            break;
+                        }
                         break;
                     case "UPDATE":
-                        //update()
+                        if (sqlQuery.Contains("SET"))
+                        {
+                            //update()
+                            break;
+                        }
+                        Console.WriteLine("SQL>Syntax Error");
                         break;
                     case "CREATE":
                         if (sqlQuery[1] == "TABLE")
                         {
                             //createTable()
+                            break;
                         }
+                        Console.WriteLine("SQL>Syntax Error");
                         break;
                     case "INSERT":
-                        if (sqlQuery[1] == "INTO")
+                        if (sqlQuery[1] == "INTO" && sqlQuery.Contains("VALUES"))
                         {
                             //insertInto()
+                            break;
                         }
+                        Console.WriteLine("SQL>Syntax Error");
                         break;
                     case "DROP":
                         //drop()
+                        break;
+                    case "TRUNCATE":
+                        //truncate()
                         break;
                     default:
                         Console.WriteLine("SQL>Syntax Error");
