@@ -14,7 +14,7 @@ namespace SQL.DBFile
     /// </summary>
     public class DbfRecord
     {
-        private const string defaultSeparator = ",";
+        private const string defaultSeparator = "|";
         public const string defaultMask = "{value}";
 
         private List<DbfField> fields;

@@ -4,8 +4,7 @@ using System.Text;
 
 namespace SQL.Commands
 {
-    interface ICommand
+    class Drop
     {
-        void Execute(List<string> query);
     }
 }

@@ -4,8 +4,11 @@ using System.Text;
 
 namespace SQL.Commands
 {
-    interface ICommand
+    class Delete : ICommand
     {
-        void Execute(List<string> query);
+        public void Execute(List<string> query)
+        {
+
+        }
     }
 }
