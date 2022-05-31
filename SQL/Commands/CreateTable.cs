@@ -14,26 +14,26 @@ namespace SQL.Commands
             query[0] = query[0].Substring(1); //убираем '('
             List<DbfField> fields = new List<DbfField>();
             try {
-                for (int i = 0; i < query.Count; i += 2)
+                for (int i = 0; i < query.Count; i += 2)   //для каждой пары значений name + Fieldtype пихаем в общий лист DbfFields  
                 {
                     query[i + 1].Trim(',');
                     query[i + 1].Trim(')');
                     if (query[i + 1].Contains('(') == true)
                     {
-                        if (query[i + 1].StartsWith('C'))
+                        if (query[i + 1].StartsWith('C') && query[i + 1][1] == '(')
                         {
 
                             query[i + 1] = query[i + 1].Substring(1);
                             query[i + 1] = query[i + 1].Trim(',');
                             query[i + 1] = query[i + 1].Trim('(', ')');
-                            Console.WriteLine(query[i + 1]);
+                            
 
                             DbfField field = new DbfField(query[i], DbfFieldType.Character, byte.Parse(query[i + 1]));
                             fields.Add(field);
 
                             continue;
                         }
-                        if (query[i + 1].StartsWith('N'))
+                        if (query[i + 1].StartsWith('N') && query[i + 1][1] == '(')
                         {
                             query[i + 1] = query[i + 1].Substring(1);
                             query[i + 1] = query[i + 1].Trim('(', ')');
@@ -43,19 +43,19 @@ namespace SQL.Commands
                             continue;
                         }
                     }
-                    if (query[i + 1].StartsWith('D'))
+                    if (query[i + 1].StartsWith('D') && query[i + 1].Length == 1)
                     {
                         DbfField field = new DbfField(query[i], DbfFieldType.Date, 10);
                         fields.Add(field);
                         continue;
                     }
-                    if (query[i + 1].StartsWith('L'))
+                    if (query[i + 1].StartsWith('L') && query[i + 1].Length == 1)
                     {
                         DbfField field = new DbfField(query[i], DbfFieldType.Logical, 1);
                         fields.Add(field);
                         continue;
                     }
-                    if (query[i + 1].StartsWith('M'))
+                    if (query[i + 1].StartsWith('M') && query[i + 1].Length == 1)
                     {
                         DbfField field = new DbfField(query[i], DbfFieldType.Memo, 20);
                         fields.Add(field);

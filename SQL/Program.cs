@@ -10,14 +10,7 @@ namespace SQL
     {
         static void Main(string[] args)
         {
-            //Dbf dbf = new Dbf();
-            //dbf.Read("work.dbf");
-            //foreach (DbfField field in dbf.Fields)
-            //{
-            //    Console.WriteLine(field);
-            //}
-
-            //return;
+            
 
 
 
@@ -45,7 +38,7 @@ namespace SQL
                         
                         break;
                     case "DELETE":
-                        if (sqlQuery.Contains("FROM"))
+                        if (sqlQuery.Contains("DELETE"))
                         {
                             //delete()
                             break;
@@ -77,7 +70,8 @@ namespace SQL
                         Console.WriteLine("SQL>Syntax Error");
                         break;
                     case "DROP":
-                        //drop()
+                        Drop drop = new Drop();
+                        drop.Execute(sqlQuery);
                         break;
                     case "TRUNCATE":
                         //truncate()
