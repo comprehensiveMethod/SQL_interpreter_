@@ -32,7 +32,8 @@ namespace SQL
                     case "SELECT":
                         if (sqlQuery.Contains("FROM"))
                         {
-                            //select()
+                            Select select = new Select();
+                            select.Execute(sqlQuery);
                             break;
                         }
                         

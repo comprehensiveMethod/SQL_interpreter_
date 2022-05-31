@@ -43,19 +43,19 @@ namespace SQL.Commands
                             continue;
                         }
                     }
-                    if (query[i + 1].StartsWith('D') && query[i + 1].Length == 1)
+                    if (query[i + 1].StartsWith('D') && query[i + 1].Length == 2)
                     {
                         DbfField field = new DbfField(query[i], DbfFieldType.Date, 10);
                         fields.Add(field);
                         continue;
                     }
-                    if (query[i + 1].StartsWith('L') && query[i + 1].Length == 1)
+                    if (query[i + 1].StartsWith('L') && query[i + 1].Length == 2)
                     {
                         DbfField field = new DbfField(query[i], DbfFieldType.Logical, 1);
                         fields.Add(field);
                         continue;
                     }
-                    if (query[i + 1].StartsWith('M') && query[i + 1].Length == 1)
+                    if (query[i + 1].StartsWith('M') && query[i + 1].Length == 2)
                     {
                         DbfField field = new DbfField(query[i], DbfFieldType.Memo, 20);
                         fields.Add(field);
@@ -73,6 +73,7 @@ namespace SQL.Commands
                 }
 
                 dbf.Write(tableName + ".dbf", DbfVersion.dBase4WithMemo);
+                Console.WriteLine("Table created");
             }catch(Exception e)
             {
                 Console.WriteLine("SQL>Wrong Syntax");
