@@ -11,7 +11,7 @@ namespace SQL.Commands
 
         public Drop()
         {
-            CommandName = "Drop";
+            CommandName = "DROP";
         }
 
         public void Run(List<string> sqlQuery)

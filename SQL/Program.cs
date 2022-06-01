@@ -5,7 +5,9 @@ using SQL.Commands;
 namespace SQL
 {
     internal class Program
-    {
+    { 
+        public static bool exitFlag = false; //хз норм ли так юзать
+        public static readonly Dictionary<string,ICommand> commands = registerCommands();
         private static Dictionary<string, ICommand> registerCommands()
         {
             var commands = new Dictionary<string, ICommand>();
@@ -14,6 +16,9 @@ namespace SQL
             commands["DROP"] = new Drop();
             commands["SELECT"] = new Select();
             commands["DELETE"] = new Delete();
+            commands["EXIT"] = new Exit();
+            commands["exit"] = commands["EXIT"];
+            commands["/?"] = new Help();
             //commands["TRUNCATE"] = 
             //commands["INSERT"] = 
             //commands["UPDATE"] = ;
@@ -21,32 +26,15 @@ namespace SQL
         }
 
         private static void Main(string[] args)
-        {
-            var commands = registerCommands();
-
-
-            var exit = false;
-            while (exit != true)
+        { 
+           
+            while (Program.exitFlag != true)
             {
                 Console.Write("SQL>");
                 var sqlCommand = Console.ReadLine();
-
-                if (sqlCommand == "EXIT" || sqlCommand == "exit")
-                {
-                    exit = true;
-                    continue;
-                } //чек на выход
-
-                if (sqlCommand == "/?")
-                {
-                    Console.WriteLine(
-                        "COMMANDS: \n SELECT \n DELETE \n UPDATE \n TRUNCATE \n CREATE TABLE \n INSERT INTO \n DROP");
-                    continue;
-                } //выводит список возможных команд на экран
-
                 var sqlQuery = new List<string>(sqlCommand.Split(' '));
 
-                if (sqlQuery.Contains(sqlQuery[0]))
+                if (commands.ContainsKey(sqlQuery[0]))
                     commands[sqlQuery[0]].Run(sqlQuery);
                 else
                     Console.WriteLine("SQL>Syntax Error");
