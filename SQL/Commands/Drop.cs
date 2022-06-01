@@ -7,6 +7,19 @@ namespace SQL.Commands
 {
     class Drop : ICommand
     {
+        public string CommandName { get; }
+
+        public Drop()
+        {
+            CommandName = "Drop";
+        }
+
+        public void Run(List<string> sqlQuery)
+        {
+            Drop drop = new Drop();
+            drop.Execute(sqlQuery);
+        }
+
         public void Execute(List<string> query)
         {
             query.RemoveAt(0);

@@ -6,6 +6,23 @@ namespace SQL.Commands
 {
     class CreateTable : ICommand
     {
+        public string CommandName { get; }
+
+        public CreateTable()
+        {
+            CommandName = "CREATE TABLE";
+        }
+
+        public void Run(List<string> sqlQuery)
+        {
+            if (sqlQuery[1] == "TABLE")
+            {
+                CreateTable createTable = new CreateTable();
+                createTable.Execute(sqlQuery);
+                return;
+            }
+            Console.WriteLine("SQL>Syntax Error");
+        }
 
         public void Execute(List<string> query)
         {
