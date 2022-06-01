@@ -13,16 +13,16 @@ namespace SQL.Commands
         }
         public void Run(List<string> sqlQuery)
         {
+          Execute(sqlQuery);
+        }
+
+        public void Execute(List<string> query)
+        {
             Console.WriteLine("COMMANDS:");
             foreach (var commands in Program.commands)
             {
                 Console.WriteLine(commands.Value.CommandName);
             }
-        }
-
-        public void Execute(List<string> query)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

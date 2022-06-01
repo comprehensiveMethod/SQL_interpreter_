@@ -15,13 +15,13 @@ namespace SQL.Commands
         {
             if (sqlQuery[0] == "EXIT" || sqlQuery[0] == "exit")
             {
-                Program.exitFlag = true;
+               Execute(sqlQuery);
             } 
         }
     
         public void Execute(List<string> query)
         {
-            throw new System.NotImplementedException();
+            Program.exitFlag = true;
         }
     }
 }
