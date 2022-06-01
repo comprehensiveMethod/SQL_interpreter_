@@ -20,7 +20,7 @@ namespace SQL.Commands
 
         public void Execute(List<string> query)
         {
-
+            throw new NotImplementedException();
         }
     }
 }
