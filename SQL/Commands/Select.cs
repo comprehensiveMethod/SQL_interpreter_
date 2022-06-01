@@ -7,6 +7,23 @@ namespace SQL.Commands
 {
     class Select : ICommand
     {
+        public string CommandName { get; }
+
+        public Select()
+        {
+            CommandName = "SELECT";
+        }
+
+        public void Run(List<string> sqlQuery)
+        {
+            if (sqlQuery.Contains("FROM"))
+            {
+                Select select = new Select();
+                select.Execute(sqlQuery);
+            }
+            //что-то сделать если ошибки 
+        }
+
         public void Execute(List<string> query)
         {
             if(query.Count < 4) { Console.WriteLine("SQL>Wrong syntax"); }

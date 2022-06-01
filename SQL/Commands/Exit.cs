@@ -1,26 +1,27 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SQL.Commands
 {
-    class Delete : ICommand
+    public class Exit : ICommand
     {
         public string CommandName { get; }
 
-        public Delete()
+        public Exit()
         {
-            CommandName = "DELETE";
+            CommandName = "EXIT";
         }
 
         public void Run(List<string> sqlQuery)
         {
-            throw new NotImplementedException();
+            if (sqlQuery[0] == "EXIT" || sqlQuery[0] == "exit")
+            {
+               Execute(sqlQuery);
+            } 
         }
-
+    
         public void Execute(List<string> query)
         {
-            throw new NotImplementedException();
+            Program.exitFlag = true;
         }
     }
 }
