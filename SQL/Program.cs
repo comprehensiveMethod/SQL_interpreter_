@@ -26,8 +26,8 @@ namespace SQL
         }
 
         private static void Main(string[] args)
-        { 
-           
+        {
+            
             while (Program.exitFlag != true)
             {
                 Console.Write("SQL>");

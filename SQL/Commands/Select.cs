@@ -30,6 +30,7 @@ namespace SQL.Commands
             if(query[0] == "SELECT" && query[2] == "FROM")
             {
                 string path = query[3] + ".dbf";
+                
                 if (File.Exists(path))
                 {
                     if (query[1] == "*")
@@ -67,10 +68,10 @@ namespace SQL.Commands
                         }
 
                     }
-                    
                     else
                     {
                         List<string> fields = new List<string>(query[1].Split(','));
+                       
                         Dbf dbf = new Dbf();
                         dbf.Read(path);
                         try
@@ -78,6 +79,7 @@ namespace SQL.Commands
                             foreach (DbfField field in dbf.Fields) //проверка на наличие полей
                             {
                                 bool equals = false;
+                                
                                 foreach (string listField in fields)
                                 {
                                     if (field.Name == listField)
@@ -87,16 +89,31 @@ namespace SQL.Commands
                                 }
                                 if (equals == false) throw new Exception("SQL>No such field in table");   //если не нашлось за цикл по листу то кидаем ошибку
                             }
+                            
+                            foreach (var field in fields)
+                            {
+                                Console.Write(field+"\t");
+                            }
+                            Console.WriteLine();
+                            foreach (var record in dbf.Records)
+                            {
+                                foreach (var field in fields)
+                                {
+                                    Console.WriteLine(record[field]+"\t");
+                                }
+                                Console.WriteLine();
+                            }
                         }
                         catch (Exception e) { Console.WriteLine(e.Message); }
-
-
-
+                        
                     }
-
-
-
-                }Console.WriteLine("SQL>Table does not exist");
+                       Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine("SQL>Table does not exist");
+                }
+                
                 
                 
             }
