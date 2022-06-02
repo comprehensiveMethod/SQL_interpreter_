@@ -5,7 +5,12 @@ using SQL.Commands;
 namespace SQL
 {
     internal class Program
-    { 
+    {
+        void setData()
+        {
+            
+        }
+
         public static bool exitFlag = false; //хз норм ли так юзать
         public static readonly Dictionary<string,ICommand> commands = registerCommands();
         private static Dictionary<string, ICommand> registerCommands()

@@ -17,8 +17,8 @@ namespace SQL.Commands
         {
             if (sqlQuery[1] == "TABLE")
             {
-                CreateTable createTable = new CreateTable();
-                createTable.Execute(sqlQuery);
+                
+                this.Execute(sqlQuery);
                 return;
             }
             Console.WriteLine("SQL>Syntax Error");

@@ -18,12 +18,14 @@ namespace SQL.DBFile
         public const string defaultMask = "{value}";
 
         private List<DbfField> fields;
-
+        public Dictionary<string,int > nameToNum;
+        
         internal DbfRecord(BinaryReader reader, DbfHeader header, List<DbfField> fields, byte[] memoData, Encoding encoding)
         {
             this.fields = fields;
             Data = new List<object>();
-
+            nameToNum = new Dictionary<string, int>(); //добавить инициализаци
+            
             // Read record marker.
             byte marker = reader.ReadByte();
 
@@ -35,8 +37,12 @@ namespace SQL.DBFile
 
             // Read data for each field.
             int offset = 0;
+            int i = 0;
             foreach (DbfField field in fields)
             {
+                
+                
+                nameToNum[field.Name] = i++;
                 // Copy bytes from record buffer into field buffer.
                 byte[] buffer = new byte[field.Length];
                 Array.Copy(row, offset, buffer, 0, field.Length);
@@ -61,6 +67,7 @@ namespace SQL.DBFile
 
         public object this[int index] => Data[index];
 
+      
         public object this[string name]
         {
             get
@@ -68,6 +75,11 @@ namespace SQL.DBFile
                 int index = fields.FindIndex(x => x.Name.Equals(name));
                 if (index == -1) return null;
                 return Data[index];
+            }
+            set
+            {
+                //проверки словаря 
+                this.Data[nameToNum[name]] = value;
             }
         }
 

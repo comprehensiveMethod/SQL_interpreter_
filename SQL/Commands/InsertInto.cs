@@ -17,8 +17,7 @@ namespace SQL.Commands
         {
             if (sqlQuery.Contains("INTO"))
             {
-                InsertInto insert = new InsertInto();
-                insert.Execute(sqlQuery);
+                this.Execute(sqlQuery);
             }
         }
 
@@ -45,7 +44,7 @@ namespace SQL.Commands
                         bool check = false;
                         foreach(DbfField fileField in dbf.Fields)
                         {
-                            if (fileField.== enteredField) check = true; //если имя совпало то класс
+                            if (fileField.Name== enteredField) check = true; //если имя совпало то класс
                         }
                         if (!check) //если нет то ретерн
                         {
