@@ -17,7 +17,7 @@ namespace SQL.DBFile
         private const string defaultSeparator = "|";
         public const string defaultMask = "{value}";
 
-        private List<DbfField> fields;
+        public List<DbfField> fields;
         public Dictionary<string,int > nameToNum;
         
         internal DbfRecord(BinaryReader reader, DbfHeader header, List<DbfField> fields, byte[] memoData, Encoding encoding)

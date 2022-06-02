@@ -1,5 +1,7 @@
 ﻿
 
+using System.Linq;
+
 namespace SQL.DBFile
 {
     using System;
@@ -14,7 +16,7 @@ namespace SQL.DBFile
     public class Dbf
     {
         private DbfHeader header;
-
+        public Dictionary<string,int > nameToNum;
         /// <summary>
         /// Initializes a new instance of the <see cref="Dbf" />.
         /// </summary>
@@ -23,6 +25,7 @@ namespace SQL.DBFile
             header = DbfHeader.CreateHeader(DbfVersion.FoxBaseDBase3NoMemo);
             Fields = new List<DbfField>();
             Records = new List<DbfRecord>();
+            nameToNum = new Dictionary<string, int>(); //добавить инициализаци
         }
 
         /// <summary>
@@ -191,10 +194,13 @@ namespace SQL.DBFile
         {
             Fields.Clear();
 
+            var i = 0;
             // Fields are terminated by 0x0d char.
             while (reader.PeekChar() != 0x0d)
             {
+               
                 Fields.Add(new DbfField(reader, Encoding));
+                nameToNum[Fields.Last().Name] = i++;
             }
 
             // Read fields terminator.

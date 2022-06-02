@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SQL.Commands;
+using SQL.DBFile;
 
 namespace SQL
 {
@@ -32,6 +33,8 @@ namespace SQL
 
         private static void Main(string[] args)
         {
+            
+            
             
             while (Program.exitFlag != true)
             {
