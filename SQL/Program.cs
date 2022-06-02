@@ -20,7 +20,7 @@ namespace SQL
             commands["exit"] = commands["EXIT"];
             commands["/?"] = new Help();
             //commands["TRUNCATE"] = 
-            //commands["INSERT"] = 
+            commands["INSERT"] = new InsertInto();
             //commands["UPDATE"] = ;
             return commands;
         }
