@@ -46,7 +46,7 @@ namespace SQL.DBFile
         /// <summary>
         /// The collection of <see cref="DbfRecord" /> that contains table data.
         /// </summary>
-        public List<DbfRecord> Records { get; }
+        public List<DbfRecord> Records { get; set; }
 
         /// <summary>
         /// The <see cref="System.Text.Encoding" /> class that corresponds to the specified code page.

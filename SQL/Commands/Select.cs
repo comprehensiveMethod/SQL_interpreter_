@@ -33,7 +33,7 @@ namespace SQL.Commands
                 Console.WriteLine(e);
             }
         }
-
+        
         public void Execute(List<string> query)
         {
 
