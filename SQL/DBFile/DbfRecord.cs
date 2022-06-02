@@ -17,7 +17,7 @@ namespace SQL.DBFile
         private const string defaultSeparator = "|";
         public const string defaultMask = "{value}";
 
-        public List<DbfField> fields;
+        private List<DbfField> fields;
         public Dictionary<string,int > nameToNum;
         
         internal DbfRecord(BinaryReader reader, DbfHeader header, List<DbfField> fields, byte[] memoData, Encoding encoding)
@@ -40,8 +40,6 @@ namespace SQL.DBFile
             int i = 0;
             foreach (DbfField field in fields)
             {
-                
-                
                 nameToNum[field.Name] = i++;
                 // Copy bytes from record buffer into field buffer.
                 byte[] buffer = new byte[field.Length];
@@ -78,8 +76,18 @@ namespace SQL.DBFile
             }
             set
             {
-                //проверки словаря 
-                this.Data[nameToNum[name]] = value;
+
+                for (int i = 0; i < fields.Count; i++)
+                {
+                    if (fields[i].Name == name)
+                    {
+                        this.Data[i] = value;
+                        break;
+                    }
+                }
+
+             
+                
             }
         }
 
