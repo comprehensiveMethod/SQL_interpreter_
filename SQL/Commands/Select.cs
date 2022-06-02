@@ -57,22 +57,27 @@ namespace SQL.Commands
             int i = 1;
             foreach (DbfRecord record in dbf.Records)
             {
-                Console.Write("[" + i + "]");
-                foreach (var field in fields)
+                if (ForWhere(record, ""))
                 {
-                    Console.Write(record[field].ToString()+'\t');
+                    Console.Write("[" + i + "]");
+                    foreach (var field in fields)
+                    {
+                        Console.Write(record[field].ToString() + '\t');
+                    }
+
+                    Console.Write("\n");
+                    i++;
                 }
-                Console.Write("\n");
-                i++;
             }
             Console.WriteLine(--i + " rows");
      
         }
 
-        bool ForWhere()
+        bool ForWhere(DbfRecord record, string condition)
         {
 
-            return true;
+          //  condition.Replac();
+            return false;
         }
 
         List<string> GetQueryFileds(string fields,Dbf dbf)
