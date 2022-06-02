@@ -53,7 +53,7 @@ namespace SQL.Commands
                         if (query[i + 1].StartsWith('N') && query[i + 1][1] == '(')
                         {
                             query[i + 1] = query[i + 1].Substring(1);
-                            query[i + 1] = query[i + 1].Trim('(', ')');
+                            query[i + 1] = query[i + 1].Trim('(', ')', ',');
                             List<string> nums = new List<string>(query[i + 1].Split(','));
                             DbfField field = new DbfField(query[i], DbfFieldType.Numeric, byte.Parse(nums[0]), byte.Parse(nums[1]));
                             fields.Add(field);

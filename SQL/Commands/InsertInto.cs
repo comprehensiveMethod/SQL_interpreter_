@@ -18,7 +18,7 @@ namespace SQL.Commands
 
         public void Execute(List<string> query)
         {
-            if(query[0])
+           
         }
     }
 }
