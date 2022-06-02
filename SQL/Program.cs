@@ -26,7 +26,7 @@ namespace SQL
             commands["/?"] = new Help();
             //commands["TRUNCATE"] = 
             commands["INSERT"] = new InsertInto();
-            //commands["UPDATE"] = ;
+            commands["UPDATE"] = new Update();
             return commands;
         }
 
