@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Globalization;
 using SQL.DBFile;
 namespace SQL.Commands
 {
@@ -44,7 +45,8 @@ namespace SQL.Commands
                             foreach (DbfField field in dbf.Fields)
                             {
                                 
-                                Console.Write(field.Name + "|");
+                                Console.Write(field.Name + "|" );
+                                
                             }
                             Console.Write("\n");
                             int i = 1;
@@ -61,7 +63,167 @@ namespace SQL.Commands
                         }
                         if(query[4] == "WHERE")
                         {
-                            if(query.Count == 6)
+                            if(query.Count == 6) //select * from table where column=smth
+                            {
+                                if (query[5].Contains(">="))
+                                {
+                                    List<string> fieldAndValue = new List<string>(query[5].Split(">="));
+                                    if (fieldAndValue.Count != 2)
+                                    {
+                                        Console.WriteLine("SQL>Wrong syntax");
+                                        return;
+                                    }
+                                    bool fieldExists = false;
+                                    string fieldForSwitch = "";
+                                    foreach (DbfField field in dbf.Fields)
+                                    {
+                                        if(field.Name == fieldAndValue[0])
+                                        {
+                                            fieldExists = true;
+                                            fieldForSwitch = field.Type.ToString();
+                                        }
+                                        Console.Write(field.Name + "|");
+                                    }
+                                    if (!fieldExists)
+                                    {
+                                        Console.WriteLine("SQL>Wrong syntax");
+                                    }
+                                    switch (fieldForSwitch)
+                                    {
+                                        case "Numeric":
+                                            double first = double.Parse(fieldAndValue[1]);
+                                            foreach (DbfField field in dbf.Fields)
+                                            {
+                                                Console.Write(field.Name + "|");
+                                            }
+                                            Console.Write("\n");
+                                            int b = 1;
+                                            foreach (DbfRecord record in dbf.Records)
+                                            {
+                                                double second = double.Parse(record[fieldAndValue[1]].ToString());
+                                                if (first == second)
+                                                {
+                                                    Console.Write("[" + b + "]");
+                                                    Console.Write(record);
+                                                    Console.Write("\n");
+                                                    b++;
+                                                }
+
+                                            }
+                                            Console.WriteLine(--b + " rows");
+                                            return;
+                                            break;
+                                        case "Logical":
+                                            if(fieldAndValue[1] != "Y" || fieldAndValue[1] != "N")
+                                            {
+                                                Console.WriteLine("SQL>Wrong syntax");
+                                                return;
+                                            }
+                                            foreach(DbfField field in dbf.Fields)
+                                            {
+                                                Console.Write(field.Name + "|");
+                                            }
+                                            Console.Write("\n");
+                                            int i = 1;
+                                            foreach (DbfRecord record in dbf.Records)
+                                            {
+                                                if(fieldAndValue[1] == "Y")
+                                                {
+                                                    if (record[fieldAndValue[0]].ToString() == "Y")
+                                                    {
+                                                        Console.Write("[" + i + "]");
+                                                        Console.Write(record);
+                                                        Console.Write("\n");
+                                                        i++;
+                                                    }
+                                                }
+                                                if (fieldAndValue[1] == "N")
+                                                {
+                                                    if (record[fieldAndValue[0]].ToString() == "N")
+                                                    {
+                                                        Console.Write("[" + i + "]");
+                                                        Console.Write(record);
+                                                        Console.Write("\n");
+                                                        i++;
+                                                    }
+                                                }
+
+                                            }
+                                            Console.WriteLine(--i + " rows");
+                                            return;
+                                            break;
+                                        case "Character":
+                                            foreach (DbfField field in dbf.Fields)
+                                            {
+                                                Console.Write(field.Name + "|");
+                                            }
+                                            Console.Write("\n");
+                                            int j = 1;
+                                            foreach (DbfRecord record in dbf.Records)
+                                            {
+                                                if (fieldAndValue[1] == record[fieldAndValue[0]].ToString())
+                                                {
+                                                    Console.Write("[" + j + "]");
+                                                    Console.Write(record);
+                                                    Console.Write("\n");
+                                                    j++;
+                                                }
+
+                                            }
+                                            Console.WriteLine(--j + " rows");
+                                            return;
+                                            break;
+                                        case "Date":
+                                            Console.WriteLine("I cant compare Dates");
+                                            return;                                            
+                                            break;
+                                        case "Memo":
+                                            foreach (DbfField field in dbf.Fields)
+                                            {
+                                                Console.Write(field.Name + "|");
+                                            }
+                                            Console.Write("\n");
+                                            int m = 1;
+                                            foreach (DbfRecord record in dbf.Records)
+                                            {
+                                                if (fieldAndValue[1] == record[fieldAndValue[0]].ToString())
+                                                {
+                                                    Console.Write("[" + m + "]");
+                                                    Console.Write(record);
+                                                    Console.Write("\n");
+                                                    m++;
+                                                }
+
+                                            }
+                                            Console.WriteLine(--m + " rows");
+                                            return;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                   
+
+                                }
+
+                                
+                                if (query[5].Contains("<="))
+                                {
+
+                                }
+                                if (query[5].Contains('='))
+                                {
+
+                                }
+                                if (query[5].Contains('<'))
+                                {
+
+                                }
+                                if (query[5].Contains('>'))
+                                {
+
+                                }
+                            }
+                            if(query.Count == 8)
                             {
 
                             }
