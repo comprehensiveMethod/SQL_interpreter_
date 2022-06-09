@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace SQL.Commands
 {
-    interface ICommand
+    internal interface ICommand
     {
-        public string CommandName { get;  }
-        
+        public string CommandName { get; }
+
         void Run(List<string> sqlQuery);
 
         void Execute(List<string> query);

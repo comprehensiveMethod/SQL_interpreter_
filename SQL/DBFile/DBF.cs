@@ -1,24 +1,22 @@
-﻿
-
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace SQL.DBFile
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
-
     /// <summary>
-    /// The Dbf class encapsulated a dBASE table (.dbf) file, allowing
-    /// reading from disk, writing to disk, enumerating fields and enumerating records.
+    ///     The Dbf class encapsulated a dBASE table (.dbf) file, allowing
+    ///     reading from disk, writing to disk, enumerating fields and enumerating records.
     /// </summary>
     public class Dbf
     {
         private DbfHeader header;
-        public Dictionary<string,int > nameToNum;
+        public Dictionary<string, int> nameToNum;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="Dbf" />.
+        ///     Initializes a new instance of the <see cref="Dbf" />.
         /// </summary>
         public Dbf()
         {
@@ -29,7 +27,7 @@ namespace SQL.DBFile
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Dbf" /> with custom encoding.
+        ///     Initializes a new instance of the <see cref="Dbf" /> with custom encoding.
         /// </summary>
         /// <param name="encoding">Custom encoding.</param>
         public Dbf(Encoding encoding)
@@ -39,79 +37,73 @@ namespace SQL.DBFile
         }
 
         /// <summary>
-        /// The collection of <see cref="DbfField" /> that represent table header.
+        ///     The collection of <see cref="DbfField" /> that represent table header.
         /// </summary>
         public List<DbfField> Fields { get; }
 
         /// <summary>
-        /// The collection of <see cref="DbfRecord" /> that contains table data.
+        ///     The collection of <see cref="DbfRecord" /> that contains table data.
         /// </summary>
         public List<DbfRecord> Records { get; set; }
 
         /// <summary>
-        /// The <see cref="System.Text.Encoding" /> class that corresponds to the specified code page.
-        /// Default value is <see cref="System.Text.Encoding.ASCII" />
+        ///     The <see cref="System.Text.Encoding" /> class that corresponds to the specified code page.
+        ///     Default value is <see cref="System.Text.Encoding.ASCII" />
         /// </summary>
         public Encoding Encoding { get; } = Encoding.ASCII;
 
         /// <summary>
-        /// Creates a new <see cref="DbfRecord" /> with the same schema as the table.
+        ///     Creates a new <see cref="DbfRecord" /> with the same schema as the table.
         /// </summary>
         /// <returns>A <see cref="DbfRecord" /> with the same schema as the <see cref="T:System.Data.DataTable" />.</returns>
         public DbfRecord CreateRecord()
         {
-            DbfRecord record = new DbfRecord(Fields);
+            var record = new DbfRecord(Fields);
             Records.Add(record);
             return record;
         }
 
         /// <summary>
-        /// Opens a DBF file, reads the contents that initialize the current instance, and then closes the file.
+        ///     Opens a DBF file, reads the contents that initialize the current instance, and then closes the file.
         /// </summary>
         /// <param name="path">The file to read.</param>
         public void Read(string path)
         {
             // Open stream for reading.
-            using (FileStream baseStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var baseStream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                string memoPath = GetMemoPath(path);
+                var memoPath = GetMemoPath(path);
                 if (memoPath == null)
-                {
                     Read(baseStream);
-                }
                 else
-                {
-                    using (FileStream memoStream = File.Open(memoPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    using (var memoStream = File.Open(memoPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
                         Read(baseStream, memoStream);
                     }
-                }
             }
         }
 
         /// <summary>
-        /// Reads the contents of streams that initialize the current instance.
+        ///     Reads the contents of streams that initialize the current instance.
         /// </summary>
         /// <param name="baseStream">Stream with a database.</param>
         /// <param name="memoStream">Stream with a memo.</param>
         public void Read(Stream baseStream, Stream memoStream = null)
         {
-            if (baseStream == null)
-            {
-                throw new ArgumentNullException(nameof(baseStream));
-            }
+            if (baseStream == null) throw new ArgumentNullException(nameof(baseStream));
             if (!baseStream.CanSeek)
-            {
                 throw new InvalidOperationException("The stream must provide positioning (support Seek method).");
-            }
 
             baseStream.Seek(0, SeekOrigin.Begin);
 
             //using (BinaryReader reader = new BinaryReader(baseStream))
-            using (BinaryReader reader = new BinaryReader(baseStream, Encoding.ASCII))          //ReadFields() use PeekChar to detect end flag=0D, default Encoding may be UTF8 then clause exception
+            using
+                (var reader =
+                 new BinaryReader(baseStream,
+                     Encoding.ASCII)) //ReadFields() use PeekChar to detect end flag=0D, default Encoding may be UTF8 then clause exception
             {
                 ReadHeader(reader);
-                byte[] memoData = memoStream != null ? ReadMemos(memoStream) : null;
+                var memoData = memoStream != null ? ReadMemos(memoStream) : null;
                 ReadFields(reader);
 
                 // After reading the fields, we move the read pointer to the beginning
@@ -122,7 +114,8 @@ namespace SQL.DBFile
         }
 
         /// <summary>
-        /// Creates a new file, writes the current instance to the file, and then closes the file. If the target file already exists, it is overwritten.
+        ///     Creates a new file, writes the current instance to the file, and then closes the file. If the target file already
+        ///     exists, it is overwritten.
         /// </summary>
         /// <param name="path">The file to read.</param>
         /// <param name="version">The version <see cref="DbfVersion" />. If unknown specified, use current header version.</param>
@@ -134,14 +127,14 @@ namespace SQL.DBFile
                 header = DbfHeader.CreateHeader(header.Version);
             }
 
-            using (FileStream stream = File.Open(path, FileMode.Create, FileAccess.Write))
+            using (var stream = File.Open(path, FileMode.Create, FileAccess.Write))
             {
                 Write(stream, false);
             }
         }
 
         /// <summary>
-        /// Creates writes the current instance to the specified stream.
+        ///     Creates writes the current instance to the specified stream.
         /// </summary>
         /// <param name="stream">The output stream.</param>
         /// <param name="version">The version <see cref="DbfVersion" />. If unknown specified, use current header version.</param>
@@ -158,7 +151,7 @@ namespace SQL.DBFile
 
         private void Write(Stream stream, bool leaveOpen)
         {
-            using (BinaryWriter writer = new BinaryWriter(stream, Encoding, leaveOpen))
+            using (var writer = new BinaryWriter(stream, Encoding, leaveOpen))
             {
                 header.Write(writer, Fields, Records);
                 WriteFields(writer);
@@ -168,12 +161,9 @@ namespace SQL.DBFile
 
         private static byte[] ReadMemos(Stream stream)
         {
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
 
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 stream.CopyTo(ms);
                 return ms.ToArray();
@@ -183,9 +173,9 @@ namespace SQL.DBFile
         private void ReadHeader(BinaryReader reader)
         {
             // Peek at version number, then try to read correct version header.
-            byte versionByte = reader.ReadByte();
+            var versionByte = reader.ReadByte();
             reader.BaseStream.Seek(0, SeekOrigin.Begin);
-            DbfVersion version = (DbfVersion)versionByte;
+            var version = (DbfVersion) versionByte;
             header = DbfHeader.CreateHeader(version);
             header.Read(reader);
         }
@@ -198,7 +188,6 @@ namespace SQL.DBFile
             // Fields are terminated by 0x0d char.
             while (reader.PeekChar() != 0x0d)
             {
-               
                 Fields.Add(new DbfField(reader, Encoding));
                 nameToNum[Fields.Last().Name] = i++;
             }
@@ -213,48 +202,40 @@ namespace SQL.DBFile
 
             // Records are terminated by 0x1a char (officially), or EOF (also seen).
             while (reader.PeekChar() != 0x1a && reader.PeekChar() != -1)
-            {
                 try
                 {
                     Records.Add(new DbfRecord(reader, header, Fields, memoData, Encoding));
                 }
-                catch (EndOfStreamException) { }
-            }
+                catch (EndOfStreamException)
+                {
+                }
         }
 
         private void WriteFields(BinaryWriter writer)
         {
-            foreach (DbfField field in Fields)
-            {
-                field.Write(writer, Encoding);
-            }
+            foreach (var field in Fields) field.Write(writer, Encoding);
 
             // Write field descriptor array terminator.
-            writer.Write((byte)0x0d);
+            writer.Write((byte) 0x0d);
         }
 
         private void WriteRecords(BinaryWriter writer)
         {
-            foreach (DbfRecord record in Records)
-            {
-                record.Write(writer, Encoding);
-            }
+            foreach (var record in Records) record.Write(writer, Encoding);
 
             // Write EOF character.
-            writer.Write((byte)0x1a);
+            writer.Write((byte) 0x1a);
         }
 
         private static string GetMemoPath(string basePath)
         {
-            string memoPath = Path.ChangeExtension(basePath, "fpt");
+            var memoPath = Path.ChangeExtension(basePath, "fpt");
             if (!File.Exists(memoPath))
             {
                 memoPath = Path.ChangeExtension(basePath, "dbt");
-                if (!File.Exists(memoPath))
-                {
-                    return null;
-                }
+                if (!File.Exists(memoPath)) return null;
             }
+
             return memoPath;
         }
     }

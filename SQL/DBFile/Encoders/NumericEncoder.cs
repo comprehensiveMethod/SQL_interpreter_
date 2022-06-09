@@ -1,25 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace SQL.DBFile.Encoders
 {
-    using System;
-    using System.Globalization;
-    using System.Text;
-
     internal class NumericEncoder : IEncoder
     {
         private static NumericEncoder instance;
 
-        private NumericEncoder() { }
+        private NumericEncoder()
+        {
+        }
 
         public static NumericEncoder Instance => instance ?? (instance = new NumericEncoder());
 
         /// <inheritdoc />
         public byte[] Encode(DbfField field, object data, Encoding encoding)
         {
-            string text = Convert.ToString(data, CultureInfo.InvariantCulture);
+            var text = Convert.ToString(data, CultureInfo.InvariantCulture);
             if (string.IsNullOrEmpty(text))
             {
                 text = field.DefaultValue;
@@ -31,18 +29,14 @@ namespace SQL.DBFile.Encoders
                 {
                     // Truncate or pad float part.
                     if (parts[1].Length > field.Precision)
-                    {
                         parts[1] = parts[1].Substring(0, field.Precision);
-                    }
                     else
-                    {
                         parts[1] = parts[1].PadRight(field.Precision, '0');
-                    }
                 }
                 else if (field.Precision > 0)
                 {
                     // If value has no fractional part, pad it with zeros.
-                    parts = new[] { parts[0], new string('0', field.Precision) };
+                    parts = new[] {parts[0], new string('0', field.Precision)};
                 }
 
                 text = string.Join(".", parts);
@@ -59,11 +53,8 @@ namespace SQL.DBFile.Encoders
         /// <inheritdoc />
         public object Decode(byte[] buffer, byte[] memoData, Encoding encoding)
         {
-            string text = encoding.GetString(buffer).Trim();
-            if (text.Length == 0)
-            {
-                return null;
-            }
+            var text = encoding.GetString(buffer).Trim();
+            if (text.Length == 0) return null;
 
             return Convert.ToDouble(text, CultureInfo.InvariantCulture);
         }

@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace SQL.DBFile.Encoders
 {
-    using System.Text;
-
     internal class LogicalEncoder : IEncoder
     {
         private static LogicalEncoder instance;
 
-        private LogicalEncoder() { }
+        private LogicalEncoder()
+        {
+        }
 
         public static LogicalEncoder Instance => instance ?? (instance = new LogicalEncoder());
 
@@ -18,11 +16,8 @@ namespace SQL.DBFile.Encoders
         public byte[] Encode(DbfField field, object data, Encoding encoding)
         {
             // Convert boolean value to string.
-            string text = "?";
-            if (data != null)
-            {
-                text = (bool)data == true ? "Y" : "N";
-            }
+            var text = "?";
+            if (data != null) text = (bool) data ? "Y" : "N";
 
             // Grow string to fill field length.
             text = text.PadLeft(field.Length, ' ');
@@ -34,9 +29,9 @@ namespace SQL.DBFile.Encoders
         /// <inheritdoc />
         public object Decode(byte[] buffer, byte[] memoData, Encoding encoding)
         {
-            string text = encoding.GetString(buffer).Trim().ToUpper();
+            var text = encoding.GetString(buffer).Trim().ToUpper();
             if (text == "?") return null;
-            return (text == "Y" || text == "T");
+            return text == "Y" || text == "T";
         }
     }
 }

@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using SQL.Commands;
-using SQL.DBFile;
 
 namespace SQL
 {
     internal class Program
     {
-        void setData()
-        {
-            
-        }
+        public static bool exitFlag = false;
+        public static readonly Dictionary<string, ICommand> commands = registerCommands();
 
-        public static bool exitFlag = false; //хз норм ли так юзать
-        public static readonly Dictionary<string,ICommand> commands = registerCommands();
         private static Dictionary<string, ICommand> registerCommands()
         {
             var commands = new Dictionary<string, ICommand>();
@@ -25,7 +20,6 @@ namespace SQL
             commands["EXIT"] = new Exit();
             commands["exit"] = commands["EXIT"];
             commands["/?"] = new Help();
-            //commands["TRUNCATE"] = 
             commands["INSERT"] = new InsertInto();
             commands["UPDATE"] = new Update();
             return commands;
@@ -33,10 +27,7 @@ namespace SQL
 
         private static void Main(string[] args)
         {
-            
-            
-            
-            while (Program.exitFlag != true)
+            while (exitFlag != true)
             {
                 Console.Write("SQL>");
                 var sqlCommand = Console.ReadLine();
