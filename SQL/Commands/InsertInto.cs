@@ -17,10 +17,17 @@ namespace SQL.Commands
 
         public void Run(List<string> sqlQuery)
         {
-            if (sqlQuery.Contains("INTO"))
+            try
             {
-                this.Execute(sqlQuery);
+                if (sqlQuery.Contains("INTO"))
+                {
+                    this.Execute(sqlQuery);
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            } 
         }
 
         public void Execute(List<string> query)
@@ -28,11 +35,7 @@ namespace SQL.Commands
             string path = query[2] + ".dbf";
             if (!File.Exists(path))
                 throw new Exception("wrong sintax");
-
-            foreach (var d in query)
-            {
-                Console.WriteLine(d);
-            }
+            
             if (!(query[4] == "VALUES" && query[0] == "INSERT" && query[1] == "INTO"))
                 throw new Exception("wrong sintax");
 

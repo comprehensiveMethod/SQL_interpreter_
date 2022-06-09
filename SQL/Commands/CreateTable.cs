@@ -15,13 +15,18 @@ namespace SQL.Commands
 
         public void Run(List<string> sqlQuery)
         {
-            if (sqlQuery[1] == "TABLE")
+            try
             {
-                
-                this.Execute(sqlQuery);
-                return;
+                if (sqlQuery[1] != "TABLE")
+                    throw new Exception("SQL>Syntax Error");
+                    this.Execute(sqlQuery);
             }
-            Console.WriteLine("SQL>Syntax Error");
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+       
+            }
+            
         }
 
         public void Execute(List<string> query)

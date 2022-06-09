@@ -16,8 +16,16 @@ namespace SQL.Commands
 
         public void Run(List<string> sqlQuery)
         {
-            Drop drop = new Drop();
-            drop.Execute(sqlQuery);
+            try
+            {
+                this.Execute(sqlQuery);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+               
+            }
+         
         }
 
         public void Execute(List<string> query)
